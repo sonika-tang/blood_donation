@@ -24,8 +24,8 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
             <div className="hidden md:ml-8 md:flex md:space-x-2">
               <NavLink to="/" className={navLinkClass} end>Home</NavLink>
               <NavLink to="/donation" className={navLinkClass}>Donation</NavLink>
-              <NavLink to="/inventory" className={navLinkClass}>Inventory</NavLink>
               <NavLink to="/request" className={navLinkClass}>Request</NavLink>
+              <NavLink to="/inventory" className={navLinkClass}>Inventory</NavLink>
               <NavLink to="/history" className={navLinkClass}>History</NavLink>
             </div>
           </div>

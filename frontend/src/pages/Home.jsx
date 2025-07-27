@@ -46,8 +46,8 @@ const Home = () => {
                 Every 2 seconds, someone needs blood. Join thousands of donors and help save lives through blood donation.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to="/request" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                  Request Blood
+                <Link to="/donation" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  Donate Blood
                 </Link>
                 <Link to="/inventory" className="inline-flex items-center justify-center px-5 py-3 border border-white text-base font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                   Check Inventory
