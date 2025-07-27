@@ -15,11 +15,12 @@ const Header: React.FC<HeaderProps> = ({
   setIsMobileMenuOpen 
 }) => {
   const navItems = [
+    { id: 'education', label: 'Home' },
     { id: 'donation', label: 'Blood Donation' },
     { id: 'requests', label: 'Blood Requests' },
     { id: 'inventory', label: 'Blood Inventory' },
-    { id: 'history', label: 'Donation History' },
-    { id: 'education', label: 'Educational Resources' }
+    { id: 'history', label: 'Donation History' }
+
   ];
 
   return (
