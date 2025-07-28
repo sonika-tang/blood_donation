@@ -203,7 +203,7 @@ const History = () => {
 
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">Donation History</h3>
+          <h3 className="text-lg font-medium text-gray-900">History</h3>
           <div className="flex space-x-2">
             <div className="relative">
               <select className="appearance-none pl-3 pr-8 py-1 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 text-sm">
