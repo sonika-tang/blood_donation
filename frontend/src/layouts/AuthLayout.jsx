@@ -1,7 +1,7 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 
-const AuthLayout = () => {
+const AuthLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="flex justify-center p-6">
@@ -12,7 +12,7 @@ const AuthLayout = () => {
       </div>
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="w-full max-w-md">
-          <Outlet />  {/* This renders the nested route components */}
+          {children}
         </div>
       </div>
     </div>
