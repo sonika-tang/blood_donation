@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
 
 // Auth context
 import { AuthProvider } from './context/AuthContext';
@@ -23,6 +24,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          {/* Main site pages */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="inventory" element={<Inventory />} />
@@ -30,13 +32,16 @@ function App() {
             <Route path="history" element={<History />} />
             <Route path="education" element={<Education />} />
             <Route path="donation" element={<Donation />} />
-            <Route path="*" element={<NotFound />} />
           </Route>
-          
-          <Route path="/" element={<AuthLayout />}>
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
+
+          {/* Auth routes with a different layout */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
           </Route>
+
+          {/* Catch all */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>

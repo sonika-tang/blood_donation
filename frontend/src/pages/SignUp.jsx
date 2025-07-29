@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authServices } from '../services/api';
+import { authServices } from '../services/api.js';
+import React from 'react';
 
 const SignUp = ({ onSignup }) => {
   const [formData, setFormData] = useState({
@@ -71,7 +72,8 @@ const SignUp = ({ onSignup }) => {
       setApiError('');
       try {
         await authServices.register({
-          full_name: formData.firstName + ' ' + formData.lastName,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
           email: formData.email,
           phone_num: formData.phone,
           blood_type_id: formData.bloodTypeId,

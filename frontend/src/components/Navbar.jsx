@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Logo from './Logo';
+import React from 'react';
 
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

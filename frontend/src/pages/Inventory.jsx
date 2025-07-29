@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { inventoryServices } from '../services/api';
+import React from 'react';
 
 const bloodStatusColors = {
   "Safe": "text-green-600",
