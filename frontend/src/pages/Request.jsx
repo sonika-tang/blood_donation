@@ -1,45 +1,42 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { requestServices } from '../services/api';
 
 const Request = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    dateOfBirth: '',
+    dob: '',
     gender: '',
-    bloodType: '',
-    units: '',
-    urgencyLevel: '',
-    hospitalName: '',
-    dateNeeded: '',
-    note: '',
-    termsAccepted: false,
-    privacyAccepted: false
+    unit_needed: '',
+    urgency_level: '',
+    hospital_name: '',
+    date_needed: '',
+    type_id: ''
   });
-
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     });
+    setError(null);
   };
 
-  const handleBloodTypeSelect = (type) => {
-    setFormData({
-      ...formData,
-      bloodType: type
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, you would send this data to your backend
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await requestServices.createRequest(formData);
+      setSubmitted(true);
+    } catch (err) {
+      setError('Failed to submit request. Please check your input and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -69,280 +66,50 @@ const Request = () => {
         <h1 className="text-3xl font-bold text-red-600 mb-2">Request For Blood</h1>
         <p className="text-gray-600">In the hardest moments, help is closer than you think. Ask, and we&apos;ll reach out.</p>
       </div>
-
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              placeholder="Enter your full name"
-              value={formData.fullName}
-              onChange={handleInputChange}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+          <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              placeholder="Enter your phone number"
-              value={formData.phone}
-              onChange={handleInputChange}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Birth <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              value={formData.dateOfBirth}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
-            Gender <span className="text-red-600">*</span>
-          </label>
-          <select
-            id="gender"
-            name="gender"
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-            value={formData.gender}
-            onChange={handleInputChange}
-          >
-            <option value="" disabled>Select gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+          <select name="gender" value={formData.gender} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
         </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Blood Type Needed <span className="text-red-600">*</span>
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((type) => (
-              <button
-                key={type}
-                type="button"
-                className={`py-2 px-4 border ${formData.bloodType === type ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'} rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
-                onClick={() => handleBloodTypeSelect(type)}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Units Needed</label>
+          <input type="number" name="unit_needed" value={formData.unit_needed} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
         </div>
-
-        <div className="mb-6">
-          <label htmlFor="units" className="block text-sm font-medium text-gray-700 mb-1">
-            Units Needed <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="number"
-            id="units"
-            name="units"
-            min="1"
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-            placeholder="Enter number of units needed"
-            value={formData.units}
-            onChange={handleInputChange}
-          />
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Urgency Level</label>
+          <select name="urgency_level" value={formData.urgency_level} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md">
+            <option value="">Select</option>
+            <option value="Emergency">Emergency</option>
+            <option value="Within 24h">Within 24h</option>
+            <option value="Within 3 days">Within 3 days</option>
+            <option value="Not Urgent">Not Urgent</option>
+          </select>
         </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Urgency Level <span className="text-red-600">*</span>
-          </label>
-          <div className="space-y-2">
-            <div className={`border rounded-md p-3 ${formData.urgencyLevel === 'emergency' ? 'bg-red-50 border-red-300' : 'hover:bg-gray-50'}`}>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="urgencyLevel"
-                  value="emergency"
-                  checked={formData.urgencyLevel === 'emergency'}
-                  onChange={handleInputChange}
-                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
-                />
-                <span className="ml-2 text-sm font-medium text-gray-700">Emergency</span>
-              </label>
-            </div>
-            
-            <div className={`border rounded-md p-3 ${formData.urgencyLevel === 'within24h' ? 'bg-red-50 border-red-300' : 'hover:bg-gray-50'}`}>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="urgencyLevel"
-                  value="within24h"
-                  checked={formData.urgencyLevel === 'within24h'}
-                  onChange={handleInputChange}
-                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
-                />
-                <span className="ml-2 text-sm font-medium text-gray-700">Within 24h</span>
-              </label>
-            </div>
-            
-            <div className={`border rounded-md p-3 ${formData.urgencyLevel === 'within3days' ? 'bg-red-50 border-red-300' : 'hover:bg-gray-50'}`}>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="urgencyLevel"
-                  value="within3days"
-                  checked={formData.urgencyLevel === 'within3days'}
-                  onChange={handleInputChange}
-                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
-                />
-                <span className="ml-2 text-sm font-medium text-gray-700">Within 3 days</span>
-              </label>
-            </div>
-            
-            <div className={`border rounded-md p-3 ${formData.urgencyLevel === 'notUrgent' ? 'bg-red-50 border-red-300' : 'hover:bg-gray-50'}`}>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="urgencyLevel"
-                  value="notUrgent"
-                  checked={formData.urgencyLevel === 'notUrgent'}
-                  onChange={handleInputChange}
-                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
-                />
-                <span className="ml-2 text-sm font-medium text-gray-700">Not urgent</span>
-              </label>
-            </div>
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Hospital Name</label>
+          <input type="text" name="hospital_name" value={formData.hospital_name} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label htmlFor="hospitalName" className="block text-sm font-medium text-gray-700 mb-1">
-              Hospital Name <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="text"
-              id="hospitalName"
-              name="hospitalName"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              placeholder="Enter the name of your hospital"
-              value={formData.hospitalName}
-              onChange={handleInputChange}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="dateNeeded" className="block text-sm font-medium text-gray-700 mb-1">
-              Date Needed <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="date"
-              id="dateNeeded"
-              name="dateNeeded"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-              value={formData.dateNeeded}
-              onChange={handleInputChange}
-            />
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Date Needed</label>
+          <input type="date" name="date_needed" value={formData.date_needed} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
         </div>
-
-        <div className="mb-6">
-          <label htmlFor="note" className="block text-sm font-medium text-gray-700 mb-1">
-            Additional Note
-          </label>
-          <textarea
-            id="note"
-            name="note"
-            rows="4"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-            placeholder="Enter your note"
-            value={formData.note}
-            onChange={handleInputChange}
-          ></textarea>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Blood Type ID</label>
+          <input type="number" name="type_id" value={formData.type_id} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
         </div>
-
-        <div className="space-y-4 mb-8">
-          <div className="flex items-start">
-            <input
-              id="terms"
-              name="termsAccepted"
-              type="checkbox"
-              required
-              className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mt-1"
-              checked={formData.termsAccepted}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              I agree to the <Link to="/terms" className="text-red-600 hover:text-red-500">Terms and Conditions</Link> <span className="text-red-600">*</span>
-            </label>
-          </div>
-          
-          <div className="flex items-start">
-            <input
-              id="privacy"
-              name="privacyAccepted"
-              type="checkbox"
-              required
-              className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mt-1"
-              checked={formData.privacyAccepted}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="privacy" className="ml-2 block text-sm text-gray-700">
-              I acknowledge the <Link to="/privacy" className="text-red-600 hover:text-red-500">Privacy Policy</Link> <span className="text-red-600">*</span>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <button
-            type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Send Request
-          </button>
-        </div>
+        {error && <div className="text-red-600 mb-4">{error}</div>}
+        <button type="submit" disabled={isSubmitting} className="w-full py-3 px-6 bg-red-600 text-white rounded-md font-semibold hover:bg-red-700">
+          {isSubmitting ? 'Submitting...' : 'Submit Request'}
+        </button>
       </form>
     </div>
   );

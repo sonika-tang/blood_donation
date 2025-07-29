@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authServices } from '../services/api';
 
 const SignUp = ({ onSignup }) => {
   const [formData, setFormData] = useState({
@@ -9,14 +10,13 @@ const SignUp = ({ onSignup }) => {
     phone: '',
     password: '',
     confirmPassword: '',
-    bloodType: '',
+    bloodTypeId: '',
     agreeTerms: false
   });
-  
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown'];
+  const [apiError, setApiError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -24,66 +24,66 @@ const SignUp = ({ onSignup }) => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
-    
-    // Clear error when user starts typing
     if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
+      setErrors({ ...errors, [name]: '' });
     }
+    setApiError('');
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
     }
-    
     if (!formData.lastName.trim()) {
       newErrors.lastName = 'Last name is required';
     }
-    
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    
     if (!formData.phone) {
       newErrors.phone = 'Phone number is required';
     }
-    
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
-    
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
     if (!formData.agreeTerms) {
       newErrors.agreeTerms = 'You must agree to the terms and conditions';
     }
-    
+    if (!formData.bloodTypeId) {
+      newErrors.bloodTypeId = 'Blood type is required';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (validateForm()) {
       setIsSubmitting(true);
-      
-      // Simulate API call
-      setTimeout(() => {
+      setApiError('');
+      try {
+        await authServices.register({
+          full_name: formData.firstName + ' ' + formData.lastName,
+          email: formData.email,
+          phone_num: formData.phone,
+          blood_type_id: formData.bloodTypeId,
+          password: formData.password
+        });
+        if (onSignup) onSignup();
+        navigate('/login');
+      } catch (err) {
+        setApiError(err.response?.data?.message || 'Signup failed');
+      } finally {
         setIsSubmitting(false);
-        onSignup();
-      }, 1000);
+      }
     }
   };
 
@@ -105,16 +105,13 @@ const SignUp = ({ onSignup }) => {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`appearance-none block w-full px-3 py-2 border ${
-                  errors.firstName ? 'border-red-300' : 'border-gray-300'
-                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+                className={`appearance-none block w-full px-3 py-2 border ${errors.firstName ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
               />
               {errors.firstName && (
                 <p className="mt-2 text-sm text-red-600">{errors.firstName}</p>
               )}
             </div>
           </div>
-
           <div>
             <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
               Last Name
@@ -126,9 +123,7 @@ const SignUp = ({ onSignup }) => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`appearance-none block w-full px-3 py-2 border ${
-                  errors.lastName ? 'border-red-300' : 'border-gray-300'
-                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+                className={`appearance-none block w-full px-3 py-2 border ${errors.lastName ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
               />
               {errors.lastName && (
                 <p className="mt-2 text-sm text-red-600">{errors.lastName}</p>
@@ -136,7 +131,6 @@ const SignUp = ({ onSignup }) => {
             </div>
           </div>
         </div>
-
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email Address
@@ -149,16 +143,13 @@ const SignUp = ({ onSignup }) => {
               autoComplete="email"
               value={formData.email}
               onChange={handleChange}
-              className={`appearance-none block w-full px-3 py-2 border ${
-                errors.email ? 'border-red-300' : 'border-gray-300'
-              } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+              className={`appearance-none block w-full px-3 py-2 border ${errors.email ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
             />
             {errors.email && (
               <p className="mt-2 text-sm text-red-600">{errors.email}</p>
             )}
           </div>
         </div>
-
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
             Phone Number
@@ -171,36 +162,31 @@ const SignUp = ({ onSignup }) => {
               autoComplete="tel"
               value={formData.phone}
               onChange={handleChange}
-              className={`appearance-none block w-full px-3 py-2 border ${
-                errors.phone ? 'border-red-300' : 'border-gray-300'
-              } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+              className={`appearance-none block w-full px-3 py-2 border ${errors.phone ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
             />
             {errors.phone && (
               <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
             )}
           </div>
         </div>
-
         <div>
-          <label htmlFor="bloodType" className="block text-sm font-medium text-gray-700">
-            Blood Type (if known)
+          <label htmlFor="bloodTypeId" className="block text-sm font-medium text-gray-700">
+            Blood Type ID
           </label>
           <div className="mt-1">
-            <select
-              id="bloodType"
-              name="bloodType"
-              value={formData.bloodType}
+            <input
+              type="number"
+              id="bloodTypeId"
+              name="bloodTypeId"
+              value={formData.bloodTypeId}
               onChange={handleChange}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-            >
-              <option value="">Select Blood Type</option>
-              {bloodTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+              className={`appearance-none block w-full px-3 py-2 border ${errors.bloodTypeId ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+            />
+            {errors.bloodTypeId && (
+              <p className="mt-2 text-sm text-red-600">{errors.bloodTypeId}</p>
+            )}
           </div>
         </div>
-
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -214,16 +200,13 @@ const SignUp = ({ onSignup }) => {
                 autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`appearance-none block w-full px-3 py-2 border ${
-                  errors.password ? 'border-red-300' : 'border-gray-300'
-                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+                className={`appearance-none block w-full px-3 py-2 border ${errors.password ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
               />
               {errors.password && (
                 <p className="mt-2 text-sm text-red-600">{errors.password}</p>
               )}
             </div>
           </div>
-
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
               Confirm Password
@@ -236,9 +219,7 @@ const SignUp = ({ onSignup }) => {
                 autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`appearance-none block w-full px-3 py-2 border ${
-                  errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
+                className={`appearance-none block w-full px-3 py-2 border ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm`}
               />
               {errors.confirmPassword && (
                 <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>
@@ -246,7 +227,6 @@ const SignUp = ({ onSignup }) => {
             </div>
           </div>
         </div>
-
         <div className="flex items-start">
           <div className="flex items-center h-5">
             <input
@@ -255,41 +235,32 @@ const SignUp = ({ onSignup }) => {
               type="checkbox"
               checked={formData.agreeTerms}
               onChange={handleChange}
-              className={`h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded ${
-                errors.agreeTerms ? 'border-red-300' : ''
-              }`}
+              className={`h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded ${errors.agreeTerms ? 'border-red-300' : ''}`}
             />
           </div>
           <div className="ml-3 text-sm">
             <label htmlFor="agreeTerms" className="font-medium text-gray-700">
               I agree to the 
-              <Link to="/terms" className="text-red-600 hover:text-red-500">
-                {' '}Terms and Conditions
-              </Link>
+              <Link to="/terms" className="text-red-600 hover:text-red-500"> Terms and Conditions</Link>
               {' '}and{' '}
-              <Link to="/privacy" className="text-red-600 hover:text-red-500">
-                Privacy Policy
-              </Link>
+              <Link to="/privacy" className="text-red-600 hover:text-red-500">Privacy Policy</Link>
             </label>
             {errors.agreeTerms && (
               <p className="mt-2 text-sm text-red-600">{errors.agreeTerms}</p>
             )}
           </div>
         </div>
-
+        {apiError && <div className="text-red-600 text-sm">{apiError}</div>}
         <div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
-              isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
-            }`}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
           >
             {isSubmitting ? 'Creating account...' : 'Sign up'}
           </button>
         </div>
       </form>
-
       <div className="mt-6 text-center text-sm text-gray-500">
         <p>
           Already have an account?{' '}

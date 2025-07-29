@@ -1,27 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('user', {
-    user_id: {
+  return sequelize.define('donation_center', {
+    center_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    full_name: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
-    },
-    email: {
+    center_name: {
       type: DataTypes.STRING(100),
-      unique: true,
       allowNull: false,
     },
-    phone_num: {
-      type: DataTypes.STRING(20),
-    },
-    blood_type_id: {
-      type: DataTypes.INTEGER,
-      references: { model: 'blood_type', key: 'type_id' },
-    },
-    password: {
+    location: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
@@ -30,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW,
     },
   }, {
-    tableName: 'user',
+    tableName: 'donation_center',
     timestamps: false,
   });
-};
+}; 
