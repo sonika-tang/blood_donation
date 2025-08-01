@@ -27,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    donation_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    request_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   }, {
     tableName: 'history',
     timestamps: false,

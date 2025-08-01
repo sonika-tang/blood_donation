@@ -2,27 +2,27 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-// Create axios instance
+// Create Axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
-// Add auth token to requests if available
+// Request interceptor: attach token before each request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    console.log('Using token:', token); // Add this
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
+
 
 // Auth services
 export const authServices = {
@@ -43,9 +43,9 @@ export const requestServices = {
 
 // Donation services
 export const donationServices = {
-  scheduleDonation: (donationData) => api.post('/donations', donationData),
-  getDonationHistory: () => api.get('/donations/history'),
-  getDonationAppointments: () => api.get('/donations/appointments'),
+  scheduleDonation: (donationData) => api.post('/appointments', donationData),
+  getDonationHistory: () => api.get('/history'),
+  getDonationAppointments: () => api.get('/appointments/user'),
 };
 
 // Donation center services

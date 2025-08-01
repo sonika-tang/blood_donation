@@ -63,6 +63,7 @@ const Login = ({ onLogin }) => {
 
       if (response.ok) {
         onLogin?.(data); // Call parent onLogin function
+        localStorage.setItem('token', data.token); // Store token
         navigate('/');   // Redirect to homepage
       } else {
         setErrors({ general: data.message || 'Login failed' });

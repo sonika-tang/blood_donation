@@ -49,4 +49,13 @@ db.BloodType.hasMany(db.Request, { foreignKey: 'type_id' });
 db.History.belongsTo(db.User, { foreignKey: 'user_id' });
 db.User.hasMany(db.History, { foreignKey: 'user_id' });
 
+// History - Donation
+db.History.belongsTo(db.Donation, { foreignKey: 'donation_id' });
+db.Donation.hasMany(db.History, { foreignKey: 'donation_id' });
+
+// History - Request
+db.History.belongsTo(db.Request, { foreignKey: 'request_id' });
+db.Request.hasMany(db.History, { foreignKey: 'request_id' });
+
+
 module.exports = db;

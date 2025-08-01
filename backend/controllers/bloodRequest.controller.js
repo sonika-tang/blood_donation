@@ -10,6 +10,7 @@ exports.createRequest = async (req, res) => {
     const request = await Request.create({
       dob, gender, unit_needed, urgency_level, hospital_name, date_needed, type_id, user_id: req.user.user_id
     });
+
     return res.status(201).json({ message: 'Blood request submitted', request });
   } catch (err) {
     return res.status(500).json({ message: err.message });
