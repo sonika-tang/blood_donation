@@ -1,37 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const bloodCenters = [
-  {
-    name: "National Blood Transfusion Centre (NBTC)",
-    location: "Street 271, next to Khmer-Soviet Friendship Hospital, Phnom Penh",
-    bloodType: "A+",
-    units: "08",
-    status: "Safe"
-  },
-  {
-    name: "Kantha Bopha Children's Hospital",
-    location: "Near Wat Phnom, Phnom Penh",
-    bloodType: "A-",
-    units: "01",
-    status: "Critical Need"
-  },
-  {
-    name: "Calmette Hospital – Phnom Penh",
-    location: "Samdach Pan Ave (Street 51), Phnom Penh",
-    bloodType: "AB+",
-    units: "04",
-    status: "Low"
-  },
-  {
-    name: "National Blood Transfusion Centre (NBTC)",
-    location: "Street 271, next to Khmer-Soviet Friendship Hospital, Phnom Penh",
-    bloodType: "AB+",
-    units: "09",
-    status: "Safe"
-  }
-];
-
 const Home = () => {
   return (
     <div className="space-y-16 pb-10">
@@ -73,63 +42,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6 mb-8">
-          <div className="flex items-center mb-4 text-red-600">
-            <svg className="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 19C9.24 19 7 16.76 7 14C7 10.67 12 4 12 4C12 4 17 10.67 17 14C17 16.76 14.76 19 12 19Z"></path>
-            </svg>
-            <h3 className="text-lg font-bold">Blood Type:</h3>
-            <span className="ml-2 text-lg font-semibold">A-, AB+, O-</span>
-          </div>
-          <p className="text-gray-700">
-            These types are running low — your donation can make a life-saving difference.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {bloodCenters.map((center, index) => (
-            <div key={index} className="bg-white shadow rounded-lg overflow-hidden">
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-1">{center.name}</h3>
-                <p className="text-sm text-gray-500 mb-4">{center.location}</p>
-                
-                <div className="grid grid-cols-3 gap-4 text-center mb-4">
-                  <div>
-                    <div className="text-red-600 mb-1">
-                      <svg className="h-6 w-6 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 19C9.24 19 7 16.76 7 14C7 10.67 12 4 12 4C12 4 17 10.67 17 14C17 16.76 14.76 19 12 19Z"></path>
-                      </svg>
-                    </div>
-                    <div className="text-xs font-medium text-gray-500">Blood Type</div>
-                    <div className="font-bold">{center.bloodType}</div>
-                  </div>
-                  
-                  <div>
-                    <div className="text-green-600 mb-1">
-                      <svg className="h-6 w-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                    <div className="text-xs font-medium text-gray-500">Unit Available</div>
-                    <div className="font-bold">{center.units}</div>
-                  </div>
-                  
-                  <div>
-                    <div className={`${center.status === 'Safe' ? 'text-green-600' : center.status === 'Low' ? 'text-yellow-500' : 'text-red-600'} mb-1`}>
-                      <svg className="h-6 w-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                    <div className="text-xs font-medium text-gray-500">Status</div>
-                    <div className={`font-bold ${center.status === 'Safe' ? 'text-green-600' : center.status === 'Low' ? 'text-yellow-500' : 'text-red-600'}`}>
-                      {center.status}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        
 
         <div className="text-center mt-8">
           <Link to="/inventory" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">

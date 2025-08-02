@@ -3,10 +3,10 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-const MainLayout = ({ isLoggedIn, onLogout }) => {
+const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar isLoggedIn={isLoggedIn} onLogout={onLogout} />
+     <Navbar />
       <main className="flex-grow bg-gray-50">
         <Outlet />
       </main>
@@ -16,3 +16,5 @@ const MainLayout = ({ isLoggedIn, onLogout }) => {
 };
 
 export default MainLayout;
+
+

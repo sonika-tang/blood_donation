@@ -73,27 +73,6 @@ const Inventory = () => {
           />
         </div>
       </div>
-      {/* Urgently Needed Types */}
-      <div className="bg-white rounded-lg shadow mb-8 p-6">
-        <div className="flex items-center text-red-600 mb-4">
-          <svg className="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <h2 className="text-xl font-semibold">Urgently Needed Types</h2>
-        </div>
-        <div className="bg-red-50 rounded-md p-4 border border-red-100">
-          <div className="flex items-center">
-            <svg className="h-6 w-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium">Blood Type:</span>
-            <span className="ml-2 font-bold">{urgentlyNeededTypes.join(", ")}</span>
-          </div>
-          <p className="mt-2 text-sm text-gray-700">
-            These types are running low — your donation can make a life-saving difference.
-          </p>
-        </div>
-      </div>
       {/* Hospital Inventory Cards */}
       {loading ? (
         <div>Loading...</div>
@@ -122,15 +101,6 @@ const Inventory = () => {
           ))}
         </div>
       )}
-      {/* See More Button */}
-      <div className="text-center">
-        <button className="inline-flex items-center text-red-600 hover:text-red-800">
-          <span>See More</span>
-          <svg className="ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-      </div>
     </div>
   );
 };

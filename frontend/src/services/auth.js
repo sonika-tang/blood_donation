@@ -1,18 +1,17 @@
+// services/auth.js
+
 import {jwtDecode} from 'jwt-decode';
 
 export function getToken() {
   return localStorage.getItem("token");
 }
 
-
 export function setToken(token) {
-    // implement your logic to set the token
-    localStorage.setItem("token", token);
+  localStorage.setItem("token", token);
 }
 
 export function logout() {
-    // implement your logic to remove the token
-    localStorage.removeItem("token");
+  localStorage.removeItem("token");
 }
 
 export const isAuthenticated = () => {
@@ -27,7 +26,7 @@ export const isAuthenticated = () => {
     }
     return { token, user: decoded };
   } catch (err) {
+    console.error("Token decode error:", err);
     return null;
   }
 };
-
