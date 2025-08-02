@@ -238,6 +238,3 @@ Content-Type: application/json
 GET /api/inventory?bloodType=O+
 Authorization: Bearer <JWT_TOKEN>
 ```
-
-## Deployment
-Both backend and frontend are deploy in railway
