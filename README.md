@@ -45,96 +45,92 @@ A **Full-Stack Web Application** for managing blood donations, requests, invento
 | GitHub       | Version control            |
 | Postman      | API testing                |
 
+
+# 🩸 Blood Donation System – Project Structure
+
+
+## 🖥️ Frontend (React + Vite)
+
+- **public/**
+  - images/                 → Static assets
+- **src/**
+  - **components/**         → Shared UI components
+    - Footer.jsx
+    - Logo.jsx
+    - Navbar.jsx
+  - **context/**            → React Contexts (e.g. Auth)
+    - AuthContext.jsx
+  - **layouts/**            → Page-level layouts
+    - AuthLayout.jsx
+    - MainLayout.jsx
+  - **pages/**              → Main route views
+    - Donation.jsx
+    - Education.jsx
+    - History.jsx
+    - Home.jsx
+    - Inventory.jsx
+    - Login.jsx
+    - NotFound.jsx
+    - Request.jsx
+    - SignUp.jsx
+  - **services/**           → API wrappers and auth
+    - api.js
+    - auth.js
+  - App.jsx
+  - main.jsx
+  - index.css
+  - vite-env.d.ts
+- .gitignore
+- index.html
+- postcss.config.js
+- tailwind.config.js
+- README.md
+- package.json
+- package-lock.json
+
+
+
+## 🛠️ Backend (Express + Node.js)
+
+- **config/**               → Application configuration files
+  - db.config.js
+  - jwt.config.js
+- **controllers/**          → Request logic and handlers
+  - appointment.controller.js
+  - auth.controller.js
+  - bloodInventory.controller.js
+  - bloodRequest.controller.js
+  - donor.controller.js
+  - hospital.controller.js
+  - user.controller.js
+- **middleware/**           → Reusable middleware functions
+  - auth.middleware.js
+  - errorHandler.js
+- **models/**               → Sequelize/Mongoose data schemas
+  - appointment.model.js
+  - bloodInventory.model.js
+  - bloodRequest.model.js
+  - donor.model.js
+  - hospital.model.js
+  - user.model.js
+- **routes/**               → API endpoint definitions
+  - appointment.routes.js
+  - auth.routes.js
+  - bloodInventory.routes.js
+  - bloodRequest.routes.js
+  - donor.routes.js
+  - hospital.routes.js
+  - user.routes.js
+- **node_modules/**         → Installed dependencies
+- app.js                    → Main application entry point
+- .env                      → Environment variables
+- .gitignore
+- README.md
+- package-lock.json
+- package.json
+
 ---
 
-## 📂 Project Structure
-```
-blood-donation-system/
-│
-├── backend/ 
-│ ├── config/ 
-│ │ ├── db.config.js 
-│ │ └── auth.config.js 
-│ │
-│ ├── controllers/
-│ │ ├── auth.controller.js 
-│ │ ├── appointment.controller.js
-│ │ ├── blood.controller.js
-│ │ └── user.controller.js
-│ │
-│ ├── models/ 
-│ │ ├── user.model.js 
-│ │ ├── blood.model.js 
-│ │ └── index.js 
-│ │
-│ ├── routes/ 
-│ │ ├── auth.routes.js
-│ │ ├── api.routes.js
-│ │ └── index.js
-│ │
-│ ├── middleware/ 
-│ │ ├── authJwt.js 
-│ │ └── validator.js 
-│ │
-│ ├── services/ 
-│ │ ├── auth.service.js
-│ │ └── email.service.js
-│ │
-│ ├── utils/ 
-│ │ ├── apiResponse.js
-│ │ └── errorHandler.js
-│ │
-│ ├── app.js 
-│ ├── server.js 
-│ └── package.json
-│
-├── frontend/ 
-│ ├── public/ 
-│ │ ├── index.html
-│ │ ├── favicon.ico
-│ │ └── assets/ 
-│ │
-│ ├── src/ 
-│ │ ├── components/ 
-│ │ │ ├── common/ 
-│ │ │ │ ├── Button.jsx
-│ │ │ │ └── Card.jsx
-│ │ │ │
-│ │ │ ├── auth/ 
-│ │ │ │ ├── LoginForm.jsx
-│ │ │ │ └── RegisterForm.jsx
-│ │ │ │
-│ │ │ └── blood/ 
-│ │ │ ├── BloodCard.jsx
-│ │ │ └── Inventory.jsx
-│ │ │
-│ │ ├── pages/ 
-│ │ │ ├── Home.jsx
-│ │ │ ├── Dashboard.jsx
-│ │ │ └── Admin/
-│ │ │
-│ │ ├── store/ 
-│ │ │ ├── slices/ 
-│ │ │ └── store.js 
-│ │ │
-│ │ ├── services/ 
-│ │ │ ├── api.js 
-│ │ │ └── auth.js
-│ │ │
-│ │ ├── App.jsx 
-│ │ ├── App.css
-│ │ ├── index.css
-│ │ └── main.jsx 
-| |
-│ ├── .env 
-│ ├── jsconfig.json 
-│ └── package.json
-│
-├── .gitignore
-├── README.md 
-├── package.json 
-└── LICENSE
-```
 
 ## 🗃 Database Configuration
 
@@ -143,14 +139,25 @@ blood-donation-system/
 2. Configure `backend/.env`:
 
 ```env
-DB_URL=postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require
-JWT_SECRET=your_secure_secret
+PGHOST=caboose.proxy.rlwy.net
+PGUSER=postgres
+PGPASSWORD=Your_password
+PGDATABASE=postgres
+PGPORT=10177
+
+JWT_SECRET=Your_jwt_secret
+
+# Environment
+NODE_ENV=development
 ```
 
 ## ⚙ Setup Guide
 
 ### Prerequisites
 - Node.js
+- Express.js
+- axios
+- React.js
 - PostgreSQL
 - Git
 
@@ -223,7 +230,6 @@ Content-Type: application/json
 {
   "email": "donor@example.com",
   "password": "SecurePass123!",
-  "blood_type": "O+"
 }
 ```
 
@@ -234,12 +240,4 @@ Authorization: Bearer <JWT_TOKEN>
 ```
 
 ## Deployment
-### Backend to Railway
-- Connect GitHub repo
-- Set environment variables
-- Enable automatic deploys
-
-### Frontend to Vercel
-```bash
-vercel --prod
-```
+Both backend and frontend are deploy in railway
